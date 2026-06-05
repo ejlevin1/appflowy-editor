@@ -33,6 +33,7 @@ abstract class FilePickerService {
     String? initialDirectory,
     FileType type = FileType.any,
     List<String>? allowedExtensions,
+    required List<int> bytes,
     bool lockParentWindow = false,
   }) async =>
       throw UnimplementedError('saveFile() has not been implemented.');
