@@ -157,6 +157,9 @@ class NonDeltaTextInputService extends TextInputService with TextInputClient {
   }
 
   @override
+  bool onFocusReceived() => attached;
+
+  @override
   void connectionClosed() {}
 
   @override

@@ -199,6 +199,45 @@ class KeyboardServiceWidgetState extends State<KeyboardServiceWidget>
       }
     }
 
+    // On web, the IME text input connection may not receive keystrokes
+    // because the Focus widget captures browser-level focus away from the
+    // hidden <input> element. Fall back to direct character insertion.
+    if (kIsWeb && event is KeyDownEvent) {
+      final character = event.character;
+      if (character != null &&
+          character.length == 1 &&
+          !HardwareKeyboard.instance.isControlPressed &&
+          !HardwareKeyboard.instance.isMetaPressed &&
+          !HardwareKeyboard.instance.isAltPressed) {
+        final selection = editorState.selection;
+        if (selection != null) {
+          final node = editorState.getNodeAtPath(selection.end.path);
+          if (node != null && node.delta != null) {
+            final transaction = editorState.transaction;
+            if (!selection.isCollapsed) {
+              transaction.deleteText(
+                node,
+                selection.startIndex,
+                selection.endIndex - selection.startIndex,
+              );
+            }
+            transaction.insertText(node, selection.startIndex, character);
+            editorState.apply(transaction);
+
+            // Fire character shortcut events asynchronously
+            for (final shortcutEvent in widget.characterShortcutEvents) {
+              if (shortcutEvent.character == character) {
+                shortcutEvent.handler(editorState);
+                break;
+              }
+            }
+
+            return KeyEventResult.handled;
+          }
+        }
+      }
+    }
+
     return KeyEventResult.ignored;
   }
 
@@ -217,10 +256,6 @@ class KeyboardServiceWidgetState extends State<KeyboardServiceWidget>
     if (selection == null) {
       textInputService.close();
     } else {
-      // For the deletion, we should attach the text input service immediately.
-      _attachTextInputService(selection);
-      _updateCaretPosition(selection);
-
       if (editorState.selectionUpdateReason == SelectionUpdateReason.uiEvent) {
         focusNode.requestFocus();
         AppFlowyEditorLog.editor.debug('keyboard service - request focus');
@@ -229,6 +264,11 @@ class KeyboardServiceWidgetState extends State<KeyboardServiceWidget>
           'keyboard service - selection changed: $selection',
         );
       }
+
+      // Attach text input AFTER requesting focus so the hidden input
+      // element gets browser focus last (critical on web).
+      _attachTextInputService(selection);
+      _updateCaretPosition(selection);
     }
 
     previousSelection = selection;

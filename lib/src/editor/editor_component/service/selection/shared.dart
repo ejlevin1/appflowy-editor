@@ -39,7 +39,7 @@ extension EditorStateSelection on EditorState {
     // Create rect cache for this operation if not provided
     rectCache ??= {};
 
-    if (start < 0 && end >= sortedNodes.length) {
+    if (sortedNodes.isEmpty || start < 0 || end < start || end >= sortedNodes.length) {
       return null;
     }
 
