@@ -94,6 +94,8 @@ class AppFlowyEditorLog {
   void info(String message) => _logger.info(message);
 
   void debug(String message) => _logger.fine(message);
+
+  void verbose(String message) => _logger.finest(message);
 }
 
 extension on AppFlowyEditorLogLevel {

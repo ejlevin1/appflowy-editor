@@ -155,7 +155,7 @@ final class Node extends ChangeNotifier with LinkedListEntry<Node> {
     index ??= length;
 
     AppFlowyEditorLog.editor
-        .debug('insert Node $entry at path ${path + [index]}}');
+        .verbose('insert Node $entry at path ${path + [index]}}');
 
     entry._resetRelationshipIfNeeded();
     entry.parent = this;

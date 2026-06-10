@@ -260,7 +260,7 @@ class KeyboardServiceWidgetState extends State<KeyboardServiceWidget>
         focusNode.requestFocus();
         AppFlowyEditorLog.editor.debug('keyboard service - request focus');
       } else {
-        AppFlowyEditorLog.editor.debug(
+        AppFlowyEditorLog.editor.verbose(
           'keyboard service - selection changed: $selection',
         );
       }
@@ -276,7 +276,7 @@ class KeyboardServiceWidgetState extends State<KeyboardServiceWidget>
 
   void _attachTextInputService(Selection selection) {
     final textEditingValue = _getCurrentTextEditingValue(selection);
-    AppFlowyEditorLog.editor.debug(
+    AppFlowyEditorLog.editor.verbose(
       'keyboard service - attach text input service: $textEditingValue',
     );
     if (textEditingValue != null) {
@@ -345,7 +345,7 @@ class KeyboardServiceWidgetState extends State<KeyboardServiceWidget>
   }
 
   void _onFocusChanged() {
-    AppFlowyEditorLog.editor.debug(
+    AppFlowyEditorLog.editor.verbose(
       'keyboard service - focus changed: ${focusNode.hasFocus}}',
     );
 

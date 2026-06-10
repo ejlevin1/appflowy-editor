@@ -701,7 +701,7 @@ class EditorState {
     // Only debounce-seal for user edits (grouping consecutive keystrokes).
     if (source == TransactionSource.userEdit) {
       if (skipDebounce && undoManager.undoStack.isNonEmpty) {
-        AppFlowyEditorLog.editor.debug('Seal history item');
+        AppFlowyEditorLog.editor.verbose('Seal history item');
         final last = undoManager.undoStack.last;
         last.seal();
       } else {
@@ -717,7 +717,7 @@ class EditorState {
     _debouncedSealHistoryItemTimer?.cancel();
     _debouncedSealHistoryItemTimer = Timer(minHistoryItemDuration, () {
       if (undoManager.undoStack.isNonEmpty) {
-        AppFlowyEditorLog.editor.debug('Seal history item');
+        AppFlowyEditorLog.editor.verbose('Seal history item');
         final last = undoManager.undoStack.last;
         last.seal();
       }
@@ -726,7 +726,7 @@ class EditorState {
 
   void _applyTransactionInLocal(Transaction transaction) {
     for (final op in transaction.operations) {
-      AppFlowyEditorLog.editor.debug('apply op (local): ${op.toJson()}');
+      AppFlowyEditorLog.editor.verbose('apply op (local): ${op.toJson()}');
 
       if (op is InsertOperation) {
         document.insert(op.path, op.nodes);
@@ -747,7 +747,7 @@ class EditorState {
     var selection = this.selection;
 
     for (final op in transaction.operations) {
-      AppFlowyEditorLog.editor.debug('apply op (remote): ${op.toJson()}');
+      AppFlowyEditorLog.editor.verbose('apply op (remote): ${op.toJson()}');
 
       if (op is InsertOperation) {
         document.insert(op.path, op.nodes);

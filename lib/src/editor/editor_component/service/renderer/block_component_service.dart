@@ -170,7 +170,7 @@ class BlockComponentRenderer extends BlockComponentRendererService {
   @override
   void register(String type, BlockComponentBuilder builder) {
     AppFlowyEditorLog.editor
-        .info('register block component builder for type($type)');
+        .debug('register block component builder for type($type)');
     if (type.isEmpty) {
       throw ArgumentError('type should not be empty');
     }
